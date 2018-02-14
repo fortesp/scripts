@@ -1,0 +1,23 @@
+#!/bin/bash
+# ShutdownIdle script v0.1
+# Shutdown computer after 30 minutes if no network connection
+# has been established.
+#
+# Pedro Fortes 02/2018
+
+fireshutdown=false
+while true; do
+
+        cmdstr=`netstat | grep ESTABLISHED`
+
+        if [[ $cmdstr = *"ESTABLISHED"* ]]; then
+                shutdown -c 2> /dev/null
+                fireshutdown=false
+        else
+            if ! $fireshutdown ; then
+                shutdown -h +30  2> /dev/null &
+                fireshutdown=true
+            fi
+        fi
+        sleep 5
+done
